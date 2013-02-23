@@ -1,9 +1,9 @@
 AC_INIT
 
 dnl versions of gstreamer and plugins-base
-GST_MAJORMINOR=0.10
-GST_REQUIRED=0.10.0
-GSTPB_REQUIRED=0.10.0
+GST_MAJORMINOR=1.0
+GST_REQUIRED=1.0
+GSTPB_REQUIRED=1.0
 
 dnl fill in your package name and version here
 dnl the fourth (nano) number should be 0 for a release, 1 for CVS,
@@ -56,7 +56,7 @@ dnl And we can also ask for the right version of gstreamer
 
 PKG_CHECK_MODULES(GST, \
   gstreamer-$GST_MAJORMINOR >= $GST_REQUIRED
-  gstreamer-video-0.10,
+  gstreamer-video-1.0,
   HAVE_GST=yes,HAVE_GST=no)
 
 dnl Give error and exit if we don't have gstreamer

@@ -23,11 +23,11 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  *******************************************************************/
-#ifndef __GST_BCMDEC_H__
-#define __GST_BCMDEC_H__
+#ifndef __GST_BCM_DEC_H__
+#define __GST_BCM_DEC_H__
 
 
-#define	GST_BCMDEC_RANK	0xffff
+#define	GST_BCM_DEC_RANK	0xffff
 
 #define CLOCK_BASE 9LL
 #define CLOC_FREQ_CLOC_BASE * 10000
@@ -127,16 +127,16 @@ typedef struct {
 
 G_BEGIN_DECLS
 
-#define GST_TYPE_BCMDEC \
-  (gst_bcmdec_get_type())
-#define GST_BCMDEC(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_BCMDEC,GstBcmDec))
-#define GST_BCMDEC_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_BCMDEC,GstBcmDecClass))
-#define GST_IS_BCMDEC(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_BCMDEC))
-#define GST_IS_BCMDEC_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_BCMDEC))
+#define GST_TYPE_BCM_DEC \
+  (gst_bcm_dec_get_type())
+#define GST_BCM_DEC(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_BCM_DEC,GstBcmDec))
+#define GST_BCM_DEC_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_BCM_DEC,GstBcmDecClass))
+#define GST_IS_BCM_DEC(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_BCM_DEC))
+#define GST_IS_BCM_DEC_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_BCM_DEC))
 
 typedef struct _GstBcmDec      GstBcmDec;
 typedef struct _GstBcmDecClass GstBcmDecClass;
@@ -188,7 +188,7 @@ struct _GstBcmDec
 
 	gboolean flushing;
 	sem_t push_stop_event;
-    sem_t push_start_event;
+  sem_t push_start_event;
 	sem_t recv_stop_event;
 	guint ses_nbr;
 	gboolean insert_pps;
@@ -233,49 +233,50 @@ struct _GstBcmDecClass
   GstElementClass parent_class;
 };
 
-GType gst_bcmdec_get_type (void);
+GType gst_bcm_dec_get_type (void);
 
 static void
-gst_bcmdec_base_init (gpointer gclass);
+gst_bcm_dec_base_init (gpointer gclass);
 
 static void
-gst_bcmdec_class_init(GstBcmDecClass * klass);
+gst_bcm_dec_class_init(GstBcmDecClass * klass);
 
 static void
-gst_bcmdec_init(GstBcmDec * bcmdec,
-				GstBcmDecClass * gclass);
+gst_bcm_dec_init(GstBcmDec * bcmdec);
+
 
 static void
-gst_bcmdec_finalize(GObject * object);
+gst_bcm_dec_finalize(GObject * object);
 
 static GstFlowReturn
-gst_bcmdec_chain(GstPad * pad,
+gst_bcm_dec_chain(GstPad * pad,
+		 GstObject * parent,
 				 GstBuffer * buffer);
 
 static GstStateChangeReturn
-gst_bcmdec_change_state(GstElement * element,
+gst_bcm_dec_change_state(GstElement * element,
 						GstStateChange transition);
 
 static gboolean
-gst_bcmdec_sink_set_caps(GstPad * pad,
+gst_bcm_dec_sink_set_caps(GstPad * pad,
 						 GstCaps * caps);
 
-static GstCaps *gst_bcmdec_getcaps (GstPad * pad);
-
 static gboolean
-gst_bcmdec_src_event(GstPad * pad,
+gst_bcm_dec_src_event(GstPad * pad,
+		     GstObject * parent,
 					 GstEvent * event);
 
 static gboolean
-gst_bcmdec_sink_event(GstPad * pad,
+gst_bcm_dec_sink_event(GstPad * pad,
+		      GstObject * parent,
 					  GstEvent * event);
 
 static void
-gst_bcmdec_set_property (GObject * object, guint prop_id,
+gst_bcm_dec_set_property (GObject * object, guint prop_id,
 						const GValue * value, GParamSpec * pspec);
 
 static void
-gst_bcmdec_get_property (GObject * object, guint prop_id,
+gst_bcm_dec_get_property (GObject * object, guint prop_id,
 						GValue * value, GParamSpec * pspec);
 
 static gboolean
@@ -285,7 +286,7 @@ static void
 bcmdec_reset(GstBcmDec * bcmdec);
 
 static gboolean
-bcmdec_get_buffer(GstBcmDec * bcmdec, GstBuffer ** obuf);
+bcmdec_get_buffer(GstBcmDec * bcmdec, gint size, GstBuffer ** obuf);
 
 static void*
 bcmdec_process_output(void * ctx);
@@ -300,7 +301,7 @@ static gboolean
 bcmdec_format_change(GstBcmDec * filter,BC_PIC_INFO_BLOCK* pic_info);
 
 static BC_STATUS
-gst_bcmdec_cleanup(GstBcmDec *filter);
+gst_bcm_dec_cleanup(GstBcmDec *filter);
 
 static gboolean
 bcmdec_start_recv_thread(GstBcmDec * bcmdec);
@@ -339,7 +340,7 @@ bcmdec_start_push_thread(GstBcmDec * bcmdec);
 //bcmdec_insert_startcode(GstBcmDec* filter,GstBuffer* gstbuf, guint8* dest_buf,guint32* sz);
 
 static BC_STATUS
-bcmdec_insert_sps_pps(GstBcmDec* filter,GstBuffer* gstbuf);
+bcmdec_insert_sps_pps(GstBcmDec* filter, GstMapInfo* gstbuf);
 
 static void
 bcmdec_set_aspect_ratio(GstBcmDec *filter,BC_PIC_INFO_BLOCK* pic_info);
@@ -383,7 +384,6 @@ bcmdec_ins_padbuf(GstBcmDec *filter,GSTBUF_LIST	*gst_queue_element);
 static GSTBUF_LIST*
 bcmdec_rem_padbuf(GstBcmDec *filter);
 
-
 G_END_DECLS
 
-#endif /* __GST_BCMDEC_H__ */
+#endif /* __GST_BCM_DEC_H__ */
